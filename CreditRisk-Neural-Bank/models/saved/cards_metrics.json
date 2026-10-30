@@ -1,0 +1,941 @@
+{
+  "model_type": "credit_gbdt",
+  "artifact_path": "models/saved/cards_credit_gbdt.pkl",
+  "dataset_summary": {
+    "total_rows": 320,
+    "train_rows": 256,
+    "test_rows": 64,
+    "feature_names": [
+      "Revolving_Utilization_Pct",
+      "Min_Payment_Freq_Pct",
+      "Cash_Advance_Ratio_Pct",
+      "Hard_Inquiries_6M",
+      "Seasoning_Months",
+      "Overlimit_Count_12M"
+    ],
+    "target_name": "Default_12M",
+    "class_names": [
+      "Performing (0)",
+      "Defaulted (1)"
+    ],
+    "class_counts": {
+      "class_0": 230,
+      "class_1": 90
+    },
+    "preview_rows": [
+      {
+        "Revolving_Utilization_Pct": 80.392,
+        "Min_Payment_Freq_Pct": 20.167,
+        "Cash_Advance_Ratio_Pct": 13.55,
+        "Hard_Inquiries_6M": 0.0,
+        "Seasoning_Months": 38.891,
+        "Overlimit_Count_12M": 0.0,
+        "Default_12M": 0
+      },
+      {
+        "Revolving_Utilization_Pct": 64.32,
+        "Min_Payment_Freq_Pct": 21.459,
+        "Cash_Advance_Ratio_Pct": 10.147,
+        "Hard_Inquiries_6M": 0.0,
+        "Seasoning_Months": 45.775,
+        "Overlimit_Count_12M": 0.0,
+        "Default_12M": 0
+      },
+      {
+        "Revolving_Utilization_Pct": 42.73,
+        "Min_Payment_Freq_Pct": 23.518,
+        "Cash_Advance_Ratio_Pct": 34.082,
+        "Hard_Inquiries_6M": 0.0,
+        "Seasoning_Months": 16.039,
+        "Overlimit_Count_12M": 1.0,
+        "Default_12M": 0
+      },
+      {
+        "Revolving_Utilization_Pct": 62.887,
+        "Min_Payment_Freq_Pct": 32.424,
+        "Cash_Advance_Ratio_Pct": 15.123,
+        "Hard_Inquiries_6M": 1.0,
+        "Seasoning_Months": 68.047,
+        "Overlimit_Count_12M": 1.0,
+        "Default_12M": 0
+      },
+      {
+        "Revolving_Utilization_Pct": 68.789,
+        "Min_Payment_Freq_Pct": 51.487,
+        "Cash_Advance_Ratio_Pct": 10.897,
+        "Hard_Inquiries_6M": 2.0,
+        "Seasoning_Months": 19.953,
+        "Overlimit_Count_12M": 0.0,
+        "Default_12M": 1
+      },
+      {
+        "Revolving_Utilization_Pct": 54.981,
+        "Min_Payment_Freq_Pct": 72.269,
+        "Cash_Advance_Ratio_Pct": 9.599,
+        "Hard_Inquiries_6M": 3.0,
+        "Seasoning_Months": 17.209,
+        "Overlimit_Count_12M": 0.0,
+        "Default_12M": 0
+      },
+      {
+        "Revolving_Utilization_Pct": 67.705,
+        "Min_Payment_Freq_Pct": 26.919,
+        "Cash_Advance_Ratio_Pct": 18.756,
+        "Hard_Inquiries_6M": 6.0,
+        "Seasoning_Months": 60.932,
+        "Overlimit_Count_12M": 0.0,
+        "Default_12M": 1
+      },
+      {
+        "Revolving_Utilization_Pct": 53.574,
+        "Min_Payment_Freq_Pct": 25.04,
+        "Cash_Advance_Ratio_Pct": 29.156,
+        "Hard_Inquiries_6M": 3.0,
+        "Seasoning_Months": 35.861,
+        "Overlimit_Count_12M": 0.0,
+        "Default_12M": 0
+      },
+      {
+        "Revolving_Utilization_Pct": 19.113,
+        "Min_Payment_Freq_Pct": 11.33,
+        "Cash_Advance_Ratio_Pct": 11.355,
+        "Hard_Inquiries_6M": 4.0,
+        "Seasoning_Months": 41.957,
+        "Overlimit_Count_12M": 1.0,
+        "Default_12M": 0
+      },
+      {
+        "Revolving_Utilization_Pct": 52.165,
+        "Min_Payment_Freq_Pct": 29.093,
+        "Cash_Advance_Ratio_Pct": 25.862,
+        "Hard_Inquiries_6M": 1.0,
+        "Seasoning_Months": 11.45,
+        "Overlimit_Count_12M": 1.0,
+        "Default_12M": 0
+      }
+    ]
+  },
+  "metrics": {
+    "train_accuracy": 0.9688,
+    "test_accuracy": 0.8594,
+    "precision": 0.7,
+    "recall": 0.8235,
+    "f1_score": 0.7568,
+    "roc_auc": 0.933,
+    "gini_coefficient": 0.8661,
+    "ks_statistic": 0.7384,
+    "ks_optimal_threshold": 0.6,
+    "brier_score": 0.0898,
+    "confusion_matrix": {
+      "tn": 41,
+      "fp": 6,
+      "fn": 3,
+      "tp": 14
+    }
+  },
+  "basel_summary": {
+    "pd": 0.28727,
+    "lgd": 0.78,
+    "ead": 2624.0,
+    "ecl": 587.966,
+    "asset_correlation_r": 0.12,
+    "capital_factor_k": 0.3449,
+    "rwa": 11313.89,
+    "risk_weight_pct": 431.2,
+    "regulatory_capital_8pct": 905.111,
+    "total_capital_10_5pct": 1187.959,
+    "stage_1_count": 150,
+    "stage_2_count": 60,
+    "stage_3_count": 110,
+    "net_interest_earned_k": 37.65,
+    "credit_loss_incurred_k": 19.19,
+    "loss_prevented_k": 89.54,
+    "opp_cost_rejected_k": 5.51,
+    "net_portfolio_pnl_k": 18.47
+  },
+  "loss_history": [
+    {
+      "epoch": 1,
+      "loss": 0.51335
+    },
+    {
+      "epoch": 2,
+      "loss": 0.45812
+    },
+    {
+      "epoch": 3,
+      "loss": 0.41415
+    },
+    {
+      "epoch": 4,
+      "loss": 0.38263
+    },
+    {
+      "epoch": 5,
+      "loss": 0.35426
+    },
+    {
+      "epoch": 6,
+      "loss": 0.32753
+    },
+    {
+      "epoch": 7,
+      "loss": 0.30782
+    },
+    {
+      "epoch": 8,
+      "loss": 0.29069
+    },
+    {
+      "epoch": 9,
+      "loss": 0.27433
+    },
+    {
+      "epoch": 10,
+      "loss": 0.25818
+    },
+    {
+      "epoch": 11,
+      "loss": 0.23938
+    },
+    {
+      "epoch": 12,
+      "loss": 0.22945
+    },
+    {
+      "epoch": 13,
+      "loss": 0.218
+    },
+    {
+      "epoch": 14,
+      "loss": 0.20717
+    },
+    {
+      "epoch": 15,
+      "loss": 0.19561
+    },
+    {
+      "epoch": 16,
+      "loss": 0.18681
+    },
+    {
+      "epoch": 17,
+      "loss": 0.17839
+    },
+    {
+      "epoch": 18,
+      "loss": 0.1714
+    },
+    {
+      "epoch": 19,
+      "loss": 0.16393
+    },
+    {
+      "epoch": 20,
+      "loss": 0.158
+    },
+    {
+      "epoch": 21,
+      "loss": 0.15061
+    },
+    {
+      "epoch": 22,
+      "loss": 0.14723
+    },
+    {
+      "epoch": 23,
+      "loss": 0.14306
+    },
+    {
+      "epoch": 24,
+      "loss": 0.13779
+    },
+    {
+      "epoch": 25,
+      "loss": 0.12929
+    }
+  ],
+  "roc_curve": [
+    {
+      "x": 0.0,
+      "y": 0.0
+    },
+    {
+      "x": 0.0,
+      "y": 0.0588
+    },
+    {
+      "x": 0.0,
+      "y": 0.0588
+    },
+    {
+      "x": 0.0,
+      "y": 0.1765
+    },
+    {
+      "x": 0.0,
+      "y": 0.2353
+    },
+    {
+      "x": 0.0,
+      "y": 0.2353
+    },
+    {
+      "x": 0.0,
+      "y": 0.2353
+    },
+    {
+      "x": 0.0,
+      "y": 0.2941
+    },
+    {
+      "x": 0.0,
+      "y": 0.3529
+    },
+    {
+      "x": 0.0,
+      "y": 0.4118
+    },
+    {
+      "x": 0.0,
+      "y": 0.4118
+    },
+    {
+      "x": 0.0,
+      "y": 0.4706
+    },
+    {
+      "x": 0.0,
+      "y": 0.5294
+    },
+    {
+      "x": 0.0,
+      "y": 0.5294
+    },
+    {
+      "x": 0.0,
+      "y": 0.5294
+    },
+    {
+      "x": 0.0213,
+      "y": 0.5294
+    },
+    {
+      "x": 0.0213,
+      "y": 0.5294
+    },
+    {
+      "x": 0.0426,
+      "y": 0.6471
+    },
+    {
+      "x": 0.0638,
+      "y": 0.7059
+    },
+    {
+      "x": 0.0638,
+      "y": 0.7647
+    },
+    {
+      "x": 0.0851,
+      "y": 0.8235
+    },
+    {
+      "x": 0.0851,
+      "y": 0.8235
+    },
+    {
+      "x": 0.1064,
+      "y": 0.8235
+    },
+    {
+      "x": 0.1277,
+      "y": 0.8235
+    },
+    {
+      "x": 0.1277,
+      "y": 0.8235
+    },
+    {
+      "x": 0.1277,
+      "y": 0.8235
+    },
+    {
+      "x": 0.1277,
+      "y": 0.8235
+    },
+    {
+      "x": 0.1277,
+      "y": 0.8235
+    },
+    {
+      "x": 0.1277,
+      "y": 0.8235
+    },
+    {
+      "x": 0.1277,
+      "y": 0.8235
+    },
+    {
+      "x": 0.1277,
+      "y": 0.8235
+    },
+    {
+      "x": 0.1277,
+      "y": 0.8235
+    },
+    {
+      "x": 0.1277,
+      "y": 0.8235
+    },
+    {
+      "x": 0.1277,
+      "y": 0.8235
+    },
+    {
+      "x": 0.1277,
+      "y": 0.8235
+    },
+    {
+      "x": 0.1489,
+      "y": 0.8235
+    },
+    {
+      "x": 0.1489,
+      "y": 0.8235
+    },
+    {
+      "x": 0.1702,
+      "y": 0.8235
+    },
+    {
+      "x": 0.1915,
+      "y": 0.8824
+    },
+    {
+      "x": 0.234,
+      "y": 0.9412
+    },
+    {
+      "x": 0.2766,
+      "y": 0.9412
+    },
+    {
+      "x": 0.2766,
+      "y": 0.9412
+    },
+    {
+      "x": 0.2979,
+      "y": 0.9412
+    },
+    {
+      "x": 0.2979,
+      "y": 0.9412
+    },
+    {
+      "x": 0.3617,
+      "y": 0.9412
+    },
+    {
+      "x": 0.4043,
+      "y": 0.9412
+    },
+    {
+      "x": 0.4681,
+      "y": 0.9412
+    },
+    {
+      "x": 0.5106,
+      "y": 1.0
+    },
+    {
+      "x": 0.5319,
+      "y": 1.0
+    },
+    {
+      "x": 0.7021,
+      "y": 1.0
+    },
+    {
+      "x": 1.0,
+      "y": 1.0
+    }
+  ],
+  "ks_curve": [
+    {
+      "threshold": 0.0,
+      "cum_bad": 100.0,
+      "cum_good": 100.0,
+      "ks_gap": 0.0
+    },
+    {
+      "threshold": 0.02,
+      "cum_bad": 100.0,
+      "cum_good": 70.21,
+      "ks_gap": 29.79
+    },
+    {
+      "threshold": 0.04,
+      "cum_bad": 100.0,
+      "cum_good": 53.19,
+      "ks_gap": 46.81
+    },
+    {
+      "threshold": 0.06,
+      "cum_bad": 100.0,
+      "cum_good": 51.06,
+      "ks_gap": 48.94
+    },
+    {
+      "threshold": 0.08,
+      "cum_bad": 94.12,
+      "cum_good": 46.81,
+      "ks_gap": 47.31
+    },
+    {
+      "threshold": 0.1,
+      "cum_bad": 94.12,
+      "cum_good": 40.43,
+      "ks_gap": 53.69
+    },
+    {
+      "threshold": 0.12,
+      "cum_bad": 94.12,
+      "cum_good": 36.17,
+      "ks_gap": 57.95
+    },
+    {
+      "threshold": 0.14,
+      "cum_bad": 94.12,
+      "cum_good": 29.79,
+      "ks_gap": 64.33
+    },
+    {
+      "threshold": 0.16,
+      "cum_bad": 94.12,
+      "cum_good": 29.79,
+      "ks_gap": 64.33
+    },
+    {
+      "threshold": 0.18,
+      "cum_bad": 94.12,
+      "cum_good": 27.66,
+      "ks_gap": 66.46
+    },
+    {
+      "threshold": 0.2,
+      "cum_bad": 94.12,
+      "cum_good": 27.66,
+      "ks_gap": 66.46
+    },
+    {
+      "threshold": 0.22,
+      "cum_bad": 94.12,
+      "cum_good": 23.4,
+      "ks_gap": 70.71
+    },
+    {
+      "threshold": 0.24,
+      "cum_bad": 88.24,
+      "cum_good": 19.15,
+      "ks_gap": 69.09
+    },
+    {
+      "threshold": 0.26,
+      "cum_bad": 82.35,
+      "cum_good": 17.02,
+      "ks_gap": 65.33
+    },
+    {
+      "threshold": 0.28,
+      "cum_bad": 82.35,
+      "cum_good": 14.89,
+      "ks_gap": 67.46
+    },
+    {
+      "threshold": 0.3,
+      "cum_bad": 82.35,
+      "cum_good": 14.89,
+      "ks_gap": 67.46
+    },
+    {
+      "threshold": 0.32,
+      "cum_bad": 82.35,
+      "cum_good": 12.77,
+      "ks_gap": 69.59
+    },
+    {
+      "threshold": 0.34,
+      "cum_bad": 82.35,
+      "cum_good": 12.77,
+      "ks_gap": 69.59
+    },
+    {
+      "threshold": 0.36,
+      "cum_bad": 82.35,
+      "cum_good": 12.77,
+      "ks_gap": 69.59
+    },
+    {
+      "threshold": 0.38,
+      "cum_bad": 82.35,
+      "cum_good": 12.77,
+      "ks_gap": 69.59
+    },
+    {
+      "threshold": 0.4,
+      "cum_bad": 82.35,
+      "cum_good": 12.77,
+      "ks_gap": 69.59
+    },
+    {
+      "threshold": 0.42,
+      "cum_bad": 82.35,
+      "cum_good": 12.77,
+      "ks_gap": 69.59
+    },
+    {
+      "threshold": 0.44,
+      "cum_bad": 82.35,
+      "cum_good": 12.77,
+      "ks_gap": 69.59
+    },
+    {
+      "threshold": 0.46,
+      "cum_bad": 82.35,
+      "cum_good": 12.77,
+      "ks_gap": 69.59
+    },
+    {
+      "threshold": 0.48,
+      "cum_bad": 82.35,
+      "cum_good": 12.77,
+      "ks_gap": 69.59
+    },
+    {
+      "threshold": 0.5,
+      "cum_bad": 82.35,
+      "cum_good": 12.77,
+      "ks_gap": 69.59
+    },
+    {
+      "threshold": 0.52,
+      "cum_bad": 82.35,
+      "cum_good": 12.77,
+      "ks_gap": 69.59
+    },
+    {
+      "threshold": 0.54,
+      "cum_bad": 82.35,
+      "cum_good": 12.77,
+      "ks_gap": 69.59
+    },
+    {
+      "threshold": 0.56,
+      "cum_bad": 82.35,
+      "cum_good": 10.64,
+      "ks_gap": 71.71
+    },
+    {
+      "threshold": 0.58,
+      "cum_bad": 82.35,
+      "cum_good": 8.51,
+      "ks_gap": 73.84
+    },
+    {
+      "threshold": 0.6,
+      "cum_bad": 82.35,
+      "cum_good": 8.51,
+      "ks_gap": 73.84
+    },
+    {
+      "threshold": 0.62,
+      "cum_bad": 76.47,
+      "cum_good": 6.38,
+      "ks_gap": 70.09
+    },
+    {
+      "threshold": 0.64,
+      "cum_bad": 70.59,
+      "cum_good": 6.38,
+      "ks_gap": 64.21
+    },
+    {
+      "threshold": 0.66,
+      "cum_bad": 64.71,
+      "cum_good": 4.26,
+      "ks_gap": 60.45
+    },
+    {
+      "threshold": 0.68,
+      "cum_bad": 52.94,
+      "cum_good": 2.13,
+      "ks_gap": 50.81
+    },
+    {
+      "threshold": 0.7,
+      "cum_bad": 52.94,
+      "cum_good": 2.13,
+      "ks_gap": 50.81
+    },
+    {
+      "threshold": 0.72,
+      "cum_bad": 52.94,
+      "cum_good": 0.0,
+      "ks_gap": 52.94
+    },
+    {
+      "threshold": 0.74,
+      "cum_bad": 52.94,
+      "cum_good": 0.0,
+      "ks_gap": 52.94
+    },
+    {
+      "threshold": 0.76,
+      "cum_bad": 52.94,
+      "cum_good": 0.0,
+      "ks_gap": 52.94
+    },
+    {
+      "threshold": 0.78,
+      "cum_bad": 47.06,
+      "cum_good": 0.0,
+      "ks_gap": 47.06
+    },
+    {
+      "threshold": 0.8,
+      "cum_bad": 41.18,
+      "cum_good": 0.0,
+      "ks_gap": 41.18
+    },
+    {
+      "threshold": 0.82,
+      "cum_bad": 41.18,
+      "cum_good": 0.0,
+      "ks_gap": 41.18
+    },
+    {
+      "threshold": 0.84,
+      "cum_bad": 35.29,
+      "cum_good": 0.0,
+      "ks_gap": 35.29
+    },
+    {
+      "threshold": 0.86,
+      "cum_bad": 29.41,
+      "cum_good": 0.0,
+      "ks_gap": 29.41
+    },
+    {
+      "threshold": 0.88,
+      "cum_bad": 23.53,
+      "cum_good": 0.0,
+      "ks_gap": 23.53
+    },
+    {
+      "threshold": 0.9,
+      "cum_bad": 23.53,
+      "cum_good": 0.0,
+      "ks_gap": 23.53
+    },
+    {
+      "threshold": 0.92,
+      "cum_bad": 23.53,
+      "cum_good": 0.0,
+      "ks_gap": 23.53
+    },
+    {
+      "threshold": 0.94,
+      "cum_bad": 17.65,
+      "cum_good": 0.0,
+      "ks_gap": 17.65
+    },
+    {
+      "threshold": 0.96,
+      "cum_bad": 5.88,
+      "cum_good": 0.0,
+      "ks_gap": 5.88
+    },
+    {
+      "threshold": 0.98,
+      "cum_bad": 5.88,
+      "cum_good": 0.0,
+      "ks_gap": 5.88
+    },
+    {
+      "threshold": 1.0,
+      "cum_bad": 0.0,
+      "cum_good": 0.0,
+      "ks_gap": 0.0
+    }
+  ],
+  "decile_table": [
+    {
+      "decile": "D1 (AAA)",
+      "rating": "AAA",
+      "count": 32,
+      "defaults": 0,
+      "predicted_pd_pct": 1.01,
+      "observed_bad_pct": 0.0,
+      "ecl_k": 2.06,
+      "rwa_k": 420.95
+    },
+    {
+      "decile": "D2 (AA)",
+      "rating": "AA",
+      "count": 32,
+      "defaults": 0,
+      "predicted_pd_pct": 1.5,
+      "observed_bad_pct": 0.0,
+      "ecl_k": 3.08,
+      "rwa_k": 480.51
+    },
+    {
+      "decile": "D3 (A+)",
+      "rating": "A+",
+      "count": 32,
+      "defaults": 0,
+      "predicted_pd_pct": 2.51,
+      "observed_bad_pct": 0.0,
+      "ecl_k": 5.13,
+      "rwa_k": 555.98
+    },
+    {
+      "decile": "D4 (A)",
+      "rating": "A",
+      "count": 32,
+      "defaults": 0,
+      "predicted_pd_pct": 3.74,
+      "observed_bad_pct": 0.0,
+      "ecl_k": 7.66,
+      "rwa_k": 622.22
+    },
+    {
+      "decile": "D5 (BBB+)",
+      "rating": "BBB+",
+      "count": 32,
+      "defaults": 1,
+      "predicted_pd_pct": 6.84,
+      "observed_bad_pct": 3.12,
+      "ecl_k": 14.01,
+      "rwa_k": 761.68
+    },
+    {
+      "decile": "D6 (BBB)",
+      "rating": "BBB",
+      "count": 32,
+      "defaults": 0,
+      "predicted_pd_pct": 11.2,
+      "observed_bad_pct": 0.0,
+      "ecl_k": 22.93,
+      "rwa_k": 915.22
+    },
+    {
+      "decile": "D7 (BB+)",
+      "rating": "BB+",
+      "count": 32,
+      "defaults": 3,
+      "predicted_pd_pct": 24.64,
+      "observed_bad_pct": 9.38,
+      "ecl_k": 50.43,
+      "rwa_k": 1119.9
+    },
+    {
+      "decile": "D8 (BB)",
+      "rating": "BB",
+      "count": 32,
+      "defaults": 22,
+      "predicted_pd_pct": 59.32,
+      "observed_bad_pct": 68.75,
+      "ecl_k": 121.41,
+      "rwa_k": 859.19
+    },
+    {
+      "decile": "D9 (B)",
+      "rating": "B",
+      "count": 32,
+      "defaults": 32,
+      "predicted_pd_pct": 81.54,
+      "observed_bad_pct": 100.0,
+      "ecl_k": 166.9,
+      "rwa_k": 437.35
+    },
+    {
+      "decile": "D10 (CCC/D)",
+      "rating": "CCC/D",
+      "count": 32,
+      "defaults": 32,
+      "predicted_pd_pct": 94.97,
+      "observed_bad_pct": 100.0,
+      "ecl_k": 194.37,
+      "rwa_k": 126.66
+    }
+  ],
+  "weights": [
+    0.3407,
+    0.2097,
+    0.1603,
+    0.1639,
+    0.0617,
+    0.0637
+  ],
+  "iv_scores": [
+    1.2981,
+    0.6281,
+    0.5049,
+    0.3721,
+    0.1271,
+    0.2378
+  ],
+  "bias": 0.0,
+  "feature_ranges": [
+    {
+      "index": 0,
+      "name": "Revolving_Utilization_Pct",
+      "min": 2.856,
+      "max": 97.071,
+      "mean": 50.111,
+      "iv": 1.2981
+    },
+    {
+      "index": 1,
+      "name": "Min_Payment_Freq_Pct",
+      "min": 4.942,
+      "max": 80.279,
+      "mean": 41.276,
+      "iv": 0.6281
+    },
+    {
+      "index": 2,
+      "name": "Cash_Advance_Ratio_Pct",
+      "min": 2.215,
+      "max": 74.132,
+      "mean": 16.786,
+      "iv": 0.5049
+    },
+    {
+      "index": 3,
+      "name": "Hard_Inquiries_6M",
+      "min": 0.0,
+      "max": 7.0,
+      "mean": 1.991,
+      "iv": 0.3721
+    },
+    {
+      "index": 4,
+      "name": "Seasoning_Months",
+      "min": 3.939,
+      "max": 150.0,
+      "mean": 46.037,
+      "iv": 0.1271
+    },
+    {
+      "index": 5,
+      "name": "Overlimit_Count_12M",
+      "min": 0.0,
+      "max": 3.0,
+      "mean": 0.431,
+      "iv": 0.2378
+    }
+  ]
+}

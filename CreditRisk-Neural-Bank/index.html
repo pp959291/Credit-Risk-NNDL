@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEGIS-BASEL // Institutional Credit Risk &amp; Neural Underwriting Terminal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+  <link rel="stylesheet" href="static/css/styles.css">
+</head>
+<body class="min-h-screen flex flex-col selection:bg-emerald-500 selection:text-slate-950">
+
+  <!-- Top Institutional Command Header & Workspace Switcher -->
+  <header class="bg-[#080d1a]/95 backdrop-blur-md border-b border-slate-800/90 sticky top-0 z-30">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center font-mono font-extrabold text-sm text-slate-950 shadow-[0_0_20px_rgba(16,185,129,0.35)]">
+          Æ-III
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-white">AEGIS-BASEL QUANT TERMINAL</h1>
+            <span class="hidden sm:inline-block px-2 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider bg-amber-500/15 text-amber-300 border border-amber-500/30 rounded">IFRS 9 · IRB CAPITAL</span>
+          </div>
+          <p class="text-xs text-slate-400">Neural PD Calibration · Weight-of-Evidence (WoE) Scorecard · Risk-Weighted Assets &amp; RAROC Pricing</p>
+        </div>
+      </div>
+
+      <!-- Workspace View Mode Switcher -->
+      <div class="flex items-center gap-1 bg-slate-900/90 p-1 rounded-lg border border-slate-800">
+        <button data-mode="all" class="workspaceModeBtn px-3 py-1.5 rounded-md text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Full Terminal</button>
+        <button data-mode="surface" class="workspaceModeBtn px-3 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/80 transition">Iso-PD Surface &amp; Models</button>
+        <button data-mode="diagnostics" class="workspaceModeBtn px-3 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/80 transition">Underwriting &amp; Basel Charts</button>
+        <button data-mode="blotter" class="workspaceModeBtn px-3 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800/80 transition">Loan Tape Blotter</button>
+      </div>
+
+      <!-- Active Engine & Telemetry Status -->
+      <div class="flex items-center gap-2.5">
+        <span id="activeModelBadge" class="hidden xl:inline-block px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-900 text-amber-300 border border-amber-500/30">ENGINE: WOE SCORECARD (PDO 300-850)</span>
+        <div class="flex items-center gap-2 text-xs font-mono bg-slate-900/95 px-3 py-1.5 rounded-lg border border-slate-800">
+          <span id="statusDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]"></span>
+          <span id="statusText" class="font-semibold text-emerald-300">ONLINE</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Multi-Tier Terminal Workspace -->
+  <main class="max-w-[1440px] mx-auto px-4 sm:px-6 py-5 flex-1 w-full flex flex-col gap-6">
+
+    <!-- FULL-WIDTH EXECUTIVE BASEL III & IFRS 9 TELEMETRY RIBBON -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="terminal-card rounded-xl p-4 border-t-2 border-t-rose-500 flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-mono uppercase tracking-wider text-slate-400">Expected Credit Loss (ECL)</span>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/15 text-rose-300 border border-rose-500/30">PD × LGD × EAD</span>
+        </div>
+        <div id="kpiPortfolioECL" class="text-2xl font-extrabold font-mono text-rose-400 mt-2">$0.0k</div>
+        <div id="kpiPortfolioEAD" class="text-xs font-mono text-slate-400 mt-1">Total EAD: $0k · Avg PD: --%</div>
+      </div>
+
+      <div class="terminal-card rounded-xl p-4 border-t-2 border-t-amber-500 flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-mono uppercase tracking-wider text-slate-400">Basel III IRB RWA</span>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">99.9% ASRF</span>
+        </div>
+        <div id="kpiBaselRWA" class="text-2xl font-extrabold font-mono text-amber-300 mt-2">$0k</div>
+        <div id="kpiRegCapital" class="text-xs font-mono text-slate-400 mt-1">8% Tier-1 Cap: $0k</div>
+      </div>
+
+      <div class="terminal-card rounded-xl p-4 border-t-2 border-t-cyan-400 flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-mono uppercase tracking-wider text-slate-400">Gini / Max KS Separation</span>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">RANK POWER</span>
+        </div>
+        <div id="kpiGiniKS" class="text-2xl font-extrabold font-mono text-cyan-300 mt-2">-- / --%</div>
+        <div id="kpiKSOpt" class="text-xs font-mono text-amber-300 mt-1">Optimal KS Cutoff: --% PD</div>
+      </div>
+
+      <div class="terminal-card rounded-xl p-4 border-t-2 border-t-emerald-500 flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-mono uppercase tracking-wider text-slate-400">Net Underwriting P&amp;L</span>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">OUT-OF-SAMPLE</span>
+        </div>
+        <div id="kpiNetPnL" class="text-2xl font-extrabold font-mono text-emerald-400 mt-2">+$0.0k</div>
+        <div id="kpiLossSaved" class="text-xs font-mono text-slate-400 mt-1">Default Loss Avoided: $0k</div>
+      </div>
+    </section>
+
+    <!-- TIER 1: COMMAND DOCK (4 COLS) + WIDE-SCREEN 2D ISO-PD SURFACE TERMINAL (8 COLS) -->
+    <div id="zoneSurfaceRow" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+
+      <!-- Left 4 Cols: Unified Portfolio & Model Calibration Command Dock -->
+      <div class="lg:col-span-4 flex flex-col gap-5">
+
+        <!-- Portfolio Generator & CSV Ingest Card -->
+        <section class="terminal-card rounded-xl overflow-hidden">
+          <div class="px-4 py-3 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+            <div>
+              <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400">01 // Credit Book &amp; Stress</h2>
+              <p class="text-[11px] text-slate-400">Synthesize banking facilities or load loan tape</p>
+            </div>
+            <div class="inline-flex p-0.5 bg-slate-950 rounded-lg border border-slate-800 text-xs">
+              <button id="tabBtnSynthetic" class="px-3 py-1 rounded bg-emerald-500 text-slate-950 font-semibold shadow-sm">Loan Book</button>
+              <button id="tabBtnCSV" class="px-3 py-1 rounded text-slate-400 hover:text-white">Portfolio CSV</button>
+            </div>
+          </div>
+
+          <div class="p-4">
+            <div id="panelSynthetic" class="flex flex-col gap-3.5">
+              <div>
+                <label for="selectPreset" class="block text-xs font-medium text-slate-300 mb-1.5">Banking Asset Class</label>
+                <select id="selectPreset" class="w-full text-xs bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-emerald-300 font-mono focus:outline-none focus:border-emerald-500">
+                  <option value="retail_unsecured">Retail Unsecured Personal Loans (DTI / Util / FICO)</option>
+                  <option value="mortgage_hl">Residential Mortgage &amp; Home Equity (LTV / DSCR / Rate Shock)</option>
+                  <option value="sme_commercial">SME &amp; Corporate Commercial Credit (Debt/EBITDA / ICR)</option>
+                  <option value="credit_cards">Revolving Credit Card &amp; Overdraft Book (Util / Cash Adv)</option>
+                </select>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                  <div class="flex justify-between text-xs mb-1">
+                    <span class="text-slate-400">Facilities (N)</span>
+                    <span id="valSamples" class="font-mono font-bold text-white">320</span>
+                  </div>
+                  <input id="inputSamples" type="range" min="120" max="600" step="20" value="320" class="w-full accent-emerald-500 cursor-pointer">
+                </div>
+
+                <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                  <div class="flex justify-between text-xs mb-1">
+                    <span class="text-slate-400">Macro Shock (σ)</span>
+                    <span id="valNoise" class="font-mono font-bold text-amber-400">0.16</span>
+                  </div>
+                  <input id="inputNoise" type="range" min="0.04" max="0.40" step="0.02" value="0.16" class="w-full accent-amber-500 cursor-pointer">
+                </div>
+              </div>
+
+              <div class="flex gap-2">
+                <button id="btnGenerateData" class="flex-1 py-2.5 px-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs rounded-lg transition shadow-[0_0_15px_rgba(16,185,129,0.25)]">
+                  Generate Credit Book
+                </button>
+                <button id="btnExportCSV" class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-xs rounded-lg border border-slate-700 transition">
+                  Export Loan Tape CSV
+                </button>
+              </div>
+            </div>
+
+            <div id="panelCSV" class="hidden flex flex-col gap-3.5">
+              <div class="border border-dashed border-slate-700 rounded-lg p-3.5 text-center bg-slate-900/70">
+                <input type="file" id="fileInputCSV" accept=".csv,text/csv,text/plain" class="text-xs text-slate-300 w-full cursor-pointer">
+                <p class="text-[11px] text-slate-400 mt-1.5">Upload credit CSV. Binary default target (0=Performing, 1=Default) auto-encoded.</p>
+              </div>
+
+              <div id="csvColumnSelector" class="hidden flex flex-col gap-2 bg-slate-900 p-3 rounded-lg border border-slate-800">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-medium text-slate-300">Default Target Column:</span>
+                  <select id="selectTargetCol" class="bg-slate-950 border border-slate-700 text-emerald-300 rounded px-2 py-1 text-xs font-mono"></select>
+                </div>
+                <button id="btnApplyUploadedCSV" class="w-full py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold rounded-lg">
+                  Calibrate on Uploaded CSV
+                </button>
+              </div>
+
+              <div>
+                <p class="text-xs font-medium text-slate-400 mb-1.5">Load Pre-Built Banking Benchmark CSVs:</p>
+                <div class="grid grid-cols-2 gap-1.5">
+                  <button data-sample="retail_unsecured" class="btnSampleCSV px-2.5 py-2 text-xs bg-slate-900 hover:bg-slate-800 text-emerald-300 rounded-lg border border-slate-800 text-left font-mono">Retail Personal Loans</button>
+                  <button data-sample="mortgage_hl" class="btnSampleCSV px-2.5 py-2 text-xs bg-slate-900 hover:bg-slate-800 text-emerald-300 rounded-lg border border-slate-800 text-left font-mono">Mortgage Basel III Book</button>
+                  <button data-sample="sme_commercial" class="btnSampleCSV px-2.5 py-2 text-xs bg-slate-900 hover:bg-slate-800 text-emerald-300 rounded-lg border border-slate-800 text-left font-mono">SME Commercial Credit</button>
+                  <button data-sample="credit_cards" class="btnSampleCSV px-2.5 py-2 text-xs bg-slate-900 hover:bg-slate-800 text-emerald-300 rounded-lg border border-slate-800 text-left font-mono">Revolving Credit Cards</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-3.5 pt-3 border-t border-slate-800 flex justify-between text-xs text-slate-400 font-mono">
+              <span>Loans: <strong id="summaryRows" class="text-white">320</strong></span>
+              <span>Ratios: <strong id="summaryFeatures" class="text-white">6</strong></span>
+              <span id="summaryClasses" class="text-emerald-400">Perf: 230 | Def: 90</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Specialized Credit Risk Architecture & Basel Parameters -->
+        <section class="terminal-card rounded-xl overflow-hidden flex-1 flex flex-col justify-between">
+          <div class="px-4 py-3 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+            <div>
+              <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-amber-400">02 // Neural &amp; Scorecard Engine</h2>
+              <p class="text-[11px] text-slate-400">Architecture &amp; Basel III LGD / EAD policy</p>
+            </div>
+            <button id="btnOptimalKSCutoff" class="px-2.5 py-1 text-[11px] font-mono bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-md font-semibold transition">
+              Set Optimal KS Cutoff
+            </button>
+          </div>
+
+          <div class="p-4 flex flex-col gap-3.5">
+            <div>
+              <label for="selectModelType" class="block text-xs font-medium text-slate-300 mb-1.5">Specialized Credit Architecture</label>
+              <select id="selectModelType" class="w-full text-xs bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-amber-300 font-mono focus:outline-none focus:border-amber-500">
+                <option value="woe_scorecard">WoE &amp; IV Bank Credit Scorecard (PDO 300–850 Scaling)</option>
+                <option value="credit_neural_mlp">Credit Risk Neural Network (2-Layer Cost-Sensitive MLP)</option>
+                <option value="credit_interaction_net">Leverage &amp; Stress Non-Linear Interaction Network</option>
+                <option value="credit_gbdt">Gradient Boosted Credit Decision Trees (GBDT)</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+              <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-slate-400">Step Rate (η)</span>
+                  <span id="valLR" class="font-mono font-bold text-white">0.14</span>
+                </div>
+                <input id="inputLR" type="range" min="0.02" max="0.50" step="0.02" value="0.14" class="w-full accent-emerald-500 cursor-pointer">
+              </div>
+
+              <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-slate-400">Iterations</span>
+                  <span id="valEpochs" class="font-mono font-bold text-white">200</span>
+                </div>
+                <input id="inputEpochs" type="range" min="50" max="400" step="10" value="200" class="w-full accent-emerald-500 cursor-pointer">
+              </div>
+
+              <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-slate-400">MLP Neurons</span>
+                  <span id="valHidden" class="font-mono font-bold text-white">14</span>
+                </div>
+                <input id="inputHidden" type="range" min="6" max="28" step="2" value="14" class="w-full accent-emerald-500 cursor-pointer">
+              </div>
+
+              <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-slate-400">Tree Depth</span>
+                  <span id="valDepth" class="font-mono font-bold text-white">3</span>
+                </div>
+                <input id="inputDepth" type="range" min="1" max="6" step="1" value="3" class="w-full accent-emerald-500 cursor-pointer">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2">
+              <div class="bg-amber-500/10 p-2.5 rounded-lg border border-amber-500/30">
+                <div class="flex justify-between text-[11px] mb-1">
+                  <span class="text-amber-300 font-medium">PD Cutoff</span>
+                  <span id="valThreshold" class="font-mono font-bold text-amber-300">35%</span>
+                </div>
+                <input id="inputThreshold" type="range" min="10" max="75" step="1" value="35" class="w-full accent-amber-400 cursor-pointer">
+              </div>
+
+              <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                <div class="flex justify-between text-[11px] mb-1">
+                  <span class="text-slate-400">LGD (%)</span>
+                  <span id="valLGD" class="font-mono font-bold text-white">65%</span>
+                </div>
+                <input id="inputLGD" type="range" min="10" max="90" step="5" value="65" class="w-full accent-cyan-400 cursor-pointer">
+              </div>
+
+              <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                <div class="flex justify-between text-[11px] mb-1">
+                  <span class="text-slate-400">Avg EAD</span>
+                  <span id="valEAD" class="font-mono font-bold text-white">$18.5k</span>
+                </div>
+                <input id="inputEAD" type="range" min="5" max="500" step="5" value="18.5" class="w-full accent-cyan-400 cursor-pointer">
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between text-xs bg-slate-900/90 px-3 py-2 rounded-lg border border-slate-800">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="chkStandardize" checked class="accent-emerald-500">
+                <span class="text-slate-300">Z-Score Normalize &amp; Monotonic WoE</span>
+              </label>
+              <span class="font-mono text-slate-500">80/20 Split</span>
+            </div>
+
+            <button id="btnTrainModel" class="w-full py-2.5 px-4 bg-gradient-to-r from-amber-500 to-emerald-500 hover:from-amber-400 hover:to-emerald-400 text-slate-950 font-extrabold text-xs uppercase tracking-wider rounded-lg transition shadow-md">
+              Train &amp; Calibrate Credit Risk Model
+            </button>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Right 8 Cols: Wide-Screen 2D Credit Underwriting Iso-PD Surface & Validation Telemetry -->
+      <section class="lg:col-span-8 terminal-card rounded-xl overflow-hidden flex flex-col justify-between">
+        <div class="px-5 py-3.5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between flex-wrap gap-3">
+          <div>
+            <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400">03 // 2D Credit Underwriting Iso-PD Topology &amp; Cutoff Manifold</h2>
+            <p class="text-xs text-slate-400">Emerald = Stage 1 Prime Approval · Gold Band = Active PD Cutoff · Crimson = Stage 3 Rejection Zone</p>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-mono">
+            <span class="text-slate-400">X-Ratio:</span>
+            <select id="selectAxisX" class="bg-slate-950 border border-slate-700 text-emerald-300 rounded-md px-2.5 py-1.5 text-xs"></select>
+            <span class="text-slate-500">×</span>
+            <span class="text-slate-400">Y-Ratio:</span>
+            <select id="selectAxisY" class="bg-slate-950 border border-slate-700 text-amber-300 rounded-md px-2.5 py-1.5 text-xs"></select>
+          </div>
+        </div>
+
+        <div class="p-5 flex-1 flex flex-col justify-between gap-4">
+          <div class="relative w-full aspect-[16/10] max-h-[430px] bg-[#050811] rounded-xl overflow-hidden border border-slate-800 flex items-center justify-center shadow-inner">
+            <canvas id="boundaryCanvas" width="680" height="425" class="w-full h-full object-contain"></canvas>
+            <div class="absolute bottom-3 left-3 flex flex-wrap items-center gap-3.5 bg-slate-950/90 backdrop-blur px-3 py-1.5 rounded-lg text-xs font-mono text-slate-200 border border-slate-800">
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span> <span id="legendClass0">Performing (0)</span></span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-400 inline-block"></span> <span id="legendClass1">Defaulted (1)</span></span>
+              <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-amber-400 inline-block"></span> Underwriting Cutoff</span>
+              <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400 border-2 border-slate-950 inline-block"></span> Live Applicant Crosshair</span>
+            </div>
+          </div>
+
+          <!-- 4-Card Validation Strip -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="p-3.5 bg-slate-900/90 rounded-xl border border-slate-800">
+              <span class="text-[11px] font-mono uppercase text-slate-400 block">ROC AUC Discrimination</span>
+              <span id="metricAUC" class="text-xl font-extrabold font-mono text-white mt-0.5 block">--</span>
+              <span id="metricBrier" class="text-[11px] font-mono text-emerald-400 block mt-0.5">Brier: --</span>
+            </div>
+            <div class="p-3.5 bg-slate-900/90 rounded-xl border border-slate-800">
+              <span class="text-[11px] font-mono uppercase text-slate-400 block">Gini Power (2·AUC−1)</span>
+              <span id="metricGini" class="text-xl font-extrabold font-mono text-cyan-300 mt-0.5 block">--</span>
+              <span id="metricAcc" class="text-[11px] font-mono text-slate-400 block mt-0.5">Test Acc: --%</span>
+            </div>
+            <div class="p-3.5 bg-slate-900/90 rounded-xl border border-slate-800">
+              <span class="text-[11px] font-mono uppercase text-slate-400 block">Kolmogorov-Smirnov (KS)</span>
+              <span id="metricKS" class="text-xl font-extrabold font-mono text-amber-300 mt-0.5 block">--%</span>
+              <span id="metricKSTh" class="text-[11px] font-mono text-slate-400 block mt-0.5">Max Sep @ PD = --%</span>
+            </div>
+            <div class="p-3.5 bg-slate-900/90 rounded-xl border border-slate-800">
+              <span class="text-[11px] font-mono uppercase text-slate-400 block">Default Recall Capture</span>
+              <span id="metricRecall" class="text-xl font-extrabold font-mono text-rose-400 mt-0.5 block">--%</span>
+              <span id="metricF1Prec" class="text-[11px] font-mono text-slate-400 block mt-0.5">F1: -- · Prec: --</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- TIER 2: INTERACTIVE BORROWER UNDERWRITING DESK (5 COLS) + 6-TAB DIAGNOSTIC SUITE (7 COLS) -->
+    <div id="zoneUnderwritingDiagnosticsRow" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+
+      <!-- Left 5 Cols: Single-Borrower Loan Underwriting & Basel III Pricing Desk -->
+      <section class="lg:col-span-5 terminal-card rounded-xl overflow-hidden flex flex-col justify-between">
+        <div class="px-5 py-3.5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+          <div>
+            <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400">04 // Live Borrower Underwriting &amp; RAROC Pricing Desk</h2>
+            <p class="text-[11px] text-slate-400">Slide applicant ratios to compute real-time Basel III capital &amp; credit decision</p>
+          </div>
+          <span class="text-[10px] font-mono font-bold text-amber-300 bg-amber-500/15 px-2.5 py-1 rounded border border-amber-500/30">PDO SCORECARD</span>
+        </div>
+
+        <div class="p-4 flex flex-col gap-4 flex-1 justify-between">
+          <!-- Borrower Decision & Basel III Readout Terminal -->
+          <div class="p-4 rounded-xl bg-[#070b14] border border-slate-800 flex flex-col gap-3 shadow-inner">
+            <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-800/90 pb-2.5">
+              <span class="text-xs font-mono uppercase text-slate-400">Committee Decision</span>
+              <span id="predBadge" class="px-3 py-1 rounded-md text-xs font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/50">APPROVE — STAGE 1 PRIME</span>
+            </div>
+
+            <div class="flex justify-between text-xs font-mono">
+              <span id="predProb0" class="text-emerald-400 font-semibold">Performing: 82.0%</span>
+              <span id="predProb1" class="text-rose-400 font-semibold">Default PD: 18.0%</span>
+            </div>
+            <div class="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden flex p-0.5 border border-slate-800">
+              <div id="barProb0" class="bg-emerald-500 h-full rounded-l-full transition-all" style="width: 82%"></div>
+              <div id="barProb1" class="bg-rose-500 h-full rounded-r-full transition-all" style="width: 18%"></div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-1 text-xs">
+              <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                <span class="text-[10px] font-mono text-slate-400 block">Credit Score &amp; Grade</span>
+                <span id="borrowerScore" class="font-mono font-extrabold text-sm text-amber-300 mt-0.5 block">685 (A)</span>
+              </div>
+              <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                <span class="text-[10px] font-mono text-slate-400 block">IFRS 9 Stage</span>
+                <span id="borrowerStage" class="font-mono font-bold text-xs text-emerald-300 mt-0.5 block">Stage 1 (Performing)</span>
+              </div>
+              <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                <span class="text-[10px] font-mono text-slate-400 block">Expected Loss (ECL)</span>
+                <span id="borrowerECL" class="font-mono font-extrabold text-sm text-rose-400 mt-0.5 block">$0.42k</span>
+              </div>
+              <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                <span class="text-[10px] font-mono text-slate-400 block">Basel III RWA (RW%)</span>
+                <span id="borrowerRWA" class="font-mono font-bold text-xs text-cyan-300 mt-0.5 block">$14.2k (76.8%)</span>
+              </div>
+              <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                <span class="text-[10px] font-mono text-slate-400 block">8% Tier-1 Reg Cap</span>
+                <span id="borrowerCap" class="font-mono font-extrabold text-sm text-amber-300 mt-0.5 block">$1.14k</span>
+              </div>
+              <div class="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800">
+                <span class="text-[10px] font-mono text-slate-400 block">Pricing APR &amp; RAROC</span>
+                <span id="borrowerAPR" class="font-mono font-bold text-[11px] text-emerald-300 mt-0.5 block">9.45% (+295 bps)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Applicant Financial Ratio Sliders in 2-Column Grid -->
+          <div id="inferenceSliders" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+        </div>
+      </section>
+
+      <!-- Right 7 Cols: 6-Tab Banking & Credit Risk Diagnostic Visualizations -->
+      <section class="lg:col-span-7 terminal-card rounded-xl overflow-hidden flex flex-col justify-between">
+        <div class="px-5 py-3.5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between flex-wrap gap-2">
+          <div>
+            <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-amber-400">05 // Regulatory Validation &amp; Portfolio Analytics Suite</h2>
+            <p class="text-[11px] text-slate-400">KS Curve · 10-Decile Lift · ROC/Gini · Information Value (IV) · IFRS 9 Provisioning</p>
+          </div>
+          <div class="flex flex-wrap gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800">
+            <button data-chart="ks" class="tabChartBtn px-3 py-1.5 rounded-md text-xs bg-emerald-500 text-slate-950 font-bold shadow-sm">KS Separation</button>
+            <button data-chart="decile" class="tabChartBtn px-3 py-1.5 rounded-md text-xs text-slate-400 hover:bg-slate-800 hover:text-white transition">Decile Lift &amp; ECL</button>
+            <button data-chart="roc" class="tabChartBtn px-3 py-1.5 rounded-md text-xs text-slate-400 hover:bg-slate-800 hover:text-white transition">ROC &amp; Gini</button>
+            <button data-chart="weights" class="tabChartBtn px-3 py-1.5 rounded-md text-xs text-slate-400 hover:bg-slate-800 hover:text-white transition">Feature IV &amp; Weights</button>
+            <button data-chart="cm" class="tabChartBtn px-3 py-1.5 rounded-md text-xs text-slate-400 hover:bg-slate-800 hover:text-white transition">IFRS 9 &amp; P&amp;L Matrix</button>
+            <button data-chart="loss" class="tabChartBtn px-3 py-1.5 rounded-md text-xs text-slate-400 hover:bg-slate-800 hover:text-white transition">Loss Curve</button>
+          </div>
+        </div>
+
+        <div class="p-5 flex-1 flex flex-col justify-center">
+          <div id="viewChartKS" class="relative h-80 w-full">
+            <canvas id="canvasKSChart"></canvas>
+          </div>
+
+          <div id="viewChartDecile" class="hidden relative h-80 w-full">
+            <canvas id="canvasDecileChart"></canvas>
+          </div>
+
+          <div id="viewChartROC" class="hidden relative h-80 w-full">
+            <canvas id="canvasROCChart"></canvas>
+          </div>
+
+          <div id="viewChartWeights" class="hidden relative h-80 w-full">
+            <canvas id="canvasWeightsChart"></canvas>
+          </div>
+
+          <div id="viewChartCM" class="hidden py-2 flex flex-col gap-4">
+            <div class="grid grid-cols-3 gap-3 text-center">
+              <div class="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
+                <div class="text-xs font-mono font-bold text-emerald-300">IFRS 9 Stage 1 (PD &lt; 8%)</div>
+                <div id="stage1Count" class="text-2xl font-extrabold font-mono text-white mt-1">0</div>
+                <div class="text-[11px] text-emerald-400/80">12-Month Performing Book</div>
+              </div>
+              <div class="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30">
+                <div class="text-xs font-mono font-bold text-amber-300">IFRS 9 Stage 2 (SICR 8–25%)</div>
+                <div id="stage2Count" class="text-2xl font-extrabold font-mono text-white mt-1">0</div>
+                <div class="text-[11px] text-amber-400/80">Lifetime ECL Watchlist</div>
+              </div>
+              <div class="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30">
+                <div class="text-xs font-mono font-bold text-rose-300">IFRS 9 Stage 3 (PD ≥ 25%)</div>
+                <div id="stage3Count" class="text-2xl font-extrabold font-mono text-white mt-1">0</div>
+                <div class="text-[11px] text-rose-400/80">Credit-Impaired / Default</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 w-full text-center">
+              <div class="p-4 rounded-xl bg-slate-900/95 border border-emerald-500/40">
+                <div class="text-xs font-mono font-semibold text-emerald-300">Performing Approved (True Negative)</div>
+                <div id="cmTN" class="text-2xl font-extrabold font-mono text-white mt-1">0</div>
+                <div id="cmInterestEarned" class="text-xs font-mono text-emerald-400 mt-0.5">+$0.0k Interest</div>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-900/95 border border-amber-500/40">
+                <div class="text-xs font-mono font-semibold text-amber-300">Good Loan Declined (False Positive)</div>
+                <div id="cmFP" class="text-2xl font-extrabold font-mono text-white mt-1">0</div>
+                <div id="cmOppCost" class="text-xs font-mono text-amber-400 mt-0.5">-$0.0k Foregone</div>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-900/95 border border-rose-500/40">
+                <div class="text-xs font-mono font-semibold text-rose-300">Missed Default Approved (False Negative)</div>
+                <div id="cmFN" class="text-2xl font-extrabold font-mono text-white mt-1">0</div>
+                <div id="cmLossIncurred" class="text-xs font-mono text-rose-400 mt-0.5">-$0.0k LGD Loss</div>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-900/95 border border-cyan-500/40">
+                <div class="text-xs font-mono font-semibold text-cyan-300">Default Declined / Caught (True Positive)</div>
+                <div id="cmTP" class="text-2xl font-extrabold font-mono text-white mt-1">0</div>
+                <div id="cmLossPrevented" class="text-xs font-mono text-cyan-400 mt-0.5">+$0.0k Saved</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="viewChartLoss" class="hidden relative h-80 w-full">
+            <canvas id="canvasLossChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- TIER 3: FULL-WIDTH INSTITUTIONAL LOAN TAPE & LIVE CREDIT SCORECARD BLOTTER -->
+    <section id="zoneBlotterRow" class="terminal-card rounded-xl overflow-hidden">
+      <div class="px-5 py-3.5 bg-slate-900/90 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2">
+        <div>
+          <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400">06 // Institutional Loan Tape &amp; Live Credit Scorecard Blotter</h2>
+          <p class="text-xs text-slate-400">Facility-level financial ratios, calibrated 12-Month PD %, PDO Credit Score (300–850), Rating Tier, and Performance Status</p>
+        </div>
+        <span class="text-xs font-mono px-2.5 py-1 rounded bg-slate-950 text-emerald-400 border border-slate-800">REAL-TIME FACILITY TAPE (TOP 10)</span>
+      </div>
+      <div class="p-4 overflow-x-auto">
+        <table class="w-full text-left text-xs font-mono border border-slate-800 rounded-lg overflow-hidden">
+          <thead class="bg-slate-950 text-emerald-400">
+            <tr id="previewHeaderRow"></tr>
+          </thead>
+          <tbody id="previewBodyRows" class="divide-y divide-slate-800/80 bg-slate-900/40"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+    <script src="static/js/data_generator.js"></script>
+  <script src="static/js/model_trainer.js"></script>
+  <script src="static/js/visualizer.js"></script>
+  <script src="static/js/dashboard.js"></script>
+</body>
+</html>
